@@ -1,0 +1,982 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>stuff</title><script type="text/javascript" src="C:\Users\Jonas\AppData\Roaming\cabal\Elm-0.11\elm-runtime.js"></script><script type="text/javascript">Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
+   var _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _E = _N.Error.make(_elm),
+   _J = _N.JavaScript.make(_elm),
+   $moduleName = "Main";
+   var Basics = Elm.Basics.make(_elm);
+   var Color = Elm.Color.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Collage = Elm.Graphics.Collage.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Element = Elm.Graphics.Element.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Input = Elm.Graphics.Input.make(_elm);
+   var List = Elm.List.make(_elm);
+   var Maybe = Elm.Maybe.make(_elm);
+   var Native = Native || {};
+   Native.Ports = Elm.Native.Ports.make(_elm);
+   var Prelude = Elm.Prelude.make(_elm);
+   var Set = Elm.Set.make(_elm);
+   var Signal = Elm.Signal.make(_elm);
+   var String = Elm.String.make(_elm);
+   var Text = Elm.Text.make(_elm);
+   var Time = Elm.Time.make(_elm);
+   var _op = {};
+   var blank = function (s) {
+      return _U.eq(String.length(String.trim(s)),
+      0);
+   };
+   var $ = Graphics.Input.field("λ"),
+   field = $._0,
+   content = $._1;
+   var bnd = F2(function (f,m) {
+      return function () {
+         switch (m.ctor)
+         {case "Just": return f(m._0);
+            case "Nothing":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 202 and 204");
+      }();
+   });
+   var fmap = F2(function (f,m) {
+      return A2(bnd,
+      function (x) {
+         return Maybe.Just(f(x));
+      },
+      m);
+   });
+   var white = function (c) {
+      return _U.eq(c,
+      _U.chr(" ")) || (_U.eq(c,
+      _U.chr("\t")) || _U.eq(c,
+      _U.chr("\n")));
+   };
+   var trim = function (s) {
+      return function () {
+         var _v2 = String.uncons(s);
+         switch (_v2.ctor)
+         {case "Just":
+            switch (_v2._0.ctor)
+              {case "_Tuple2":
+                 return white(_v2._0._0) ? trim(_v2._0._1) : s;}
+              break;
+            case "Nothing": return "";}
+         _E.Case($moduleName,
+         "between lines 181 and 184");
+      }();
+   };
+   var porse = function (s) {
+      return function () {
+         var _v6 = trim(s);
+         return List.concat(_J.toList(["("
+                                      ,_v6
+                                      ,")"]));
+      }();
+   };
+   var readParen1 = F3(function (s,
+   n,
+   l) {
+      return A2(bnd,
+      function (_v7) {
+         return function () {
+            switch (_v7.ctor)
+            {case "_Tuple2":
+               return _U.eq(_v7._0,
+                 _U.chr(")")) && _U.eq(l,
+                 0) ? Maybe.Just(n) : _U.eq(_v7._0,
+                 _U.chr(")")) ? A3(readParen1,
+                 _v7._1,
+                 n + 1,
+                 l - 1) : _U.eq(_v7._0,
+                 _U.chr("(")) ? A3(readParen1,
+                 _v7._1,
+                 n + 1,
+                 l + 1) : A3(readParen1,
+                 _v7._1,
+                 n + 1,
+                 l);}
+            _E.Case($moduleName,
+            "between lines 171 and 174");
+         }();
+      },
+      String.uncons(s));
+   });
+   var readParen0 = function (s) {
+      return A2(fmap,
+      function (n) {
+         return {ctor: "_Tuple2"
+                ,_0: A2(String.left,n,s)
+                ,_1: A2(String.dropLeft,
+                n + 1,
+                s)};
+      },
+      A3(readParen1,s,0,0));
+   };
+   var lam = function () {
+      var _v11 = String.uncons("λ");
+      switch (_v11.ctor)
+      {case "Just":
+         switch (_v11._0.ctor)
+           {case "_Tuple2":
+              return _v11._0._0;}
+           break;}
+      _E.Case($moduleName,
+      "on line 131, column 7 to 50");
+   }();
+   var seperator = function (c) {
+      return _U.eq(c,
+      lam) || (_U.eq(c,
+      _U.chr(".")) || (_U.eq(c,
+      _U.chr("(")) || (_U.eq(c,
+      _U.chr(")")) || white(c))));
+   };
+   var readWord1 = F3(function (c,
+   s,
+   n) {
+      return seperator(c) ? n - 1 : function () {
+         var _v15 = String.uncons(s);
+         switch (_v15.ctor)
+         {case "Just":
+            switch (_v15._0.ctor)
+              {case "_Tuple2":
+                 return A3(readWord1,
+                   _v15._0._0,
+                   _v15._0._1,
+                   n + 1);}
+              break;
+            case "Nothing": return n;}
+         _E.Case($moduleName,
+         "between lines 197 and 199");
+      }();
+   });
+   var readWord0 = F2(function (c,
+   s) {
+      return function () {
+         var n = A3(readWord1,c,s,0);
+         return {ctor: "_Tuple2"
+                ,_0: A2(String.left,n,s)
+                ,_1: A2(String.dropLeft,n,s)};
+      }();
+   });
+   var readWord = function (s) {
+      return function () {
+         var trims = trim(s);
+         return function () {
+            var _v19 = String.uncons(trims);
+            switch (_v19.ctor)
+            {case "Just":
+               switch (_v19._0.ctor)
+                 {case "_Tuple2":
+                    return seperator(_v19._0._0) ? Maybe.Nothing : Maybe.Just(A2(readWord0,
+                      _v19._0._0,
+                      trims));}
+                 break;
+               case "Nothing":
+               return Maybe.Nothing;}
+            _E.Case($moduleName,
+            "between lines 188 and 191");
+         }();
+      }();
+   };
+   var readParam = function (s) {
+      return A2(bnd,
+      function (_v23) {
+         return function () {
+            switch (_v23.ctor)
+            {case "_Tuple2":
+               return function () {
+                    var _v27 = String.uncons(_v23._1);
+                    switch (_v27.ctor)
+                    {case "Just":
+                       switch (_v27._0.ctor)
+                         {case "_Tuple2":
+                            switch (_v27._0._0 + "")
+                              {case ".":
+                                 return Maybe.Just({ctor: "_Tuple2"
+                                                   ,_0: _v23._0
+                                                   ,_1: _v27._0._1});}
+                              break;}
+                         break;}
+                    return Maybe.Nothing;
+                 }();}
+            _E.Case($moduleName,
+            "between lines 160 and 162");
+         }();
+      },
+      readWord(s));
+   };
+   var purse = function (s) {
+      return function () {
+         var _v31 = readWord(s);
+         switch (_v31.ctor)
+         {case "Just":
+            switch (_v31._0.ctor)
+              {case "_Tuple2":
+                 return List.concat(_J.toList(["("
+                                              ,_v31._0._0
+                                              ,") -- ("
+                                              ,purse(_v31._0._1)
+                                              ,")"]));}
+              break;
+            case "Nothing": return ":(";}
+         _E.Case($moduleName,
+         "between lines 214 and 216");
+      }();
+   };
+   var firstString = F3(function (s,
+   ss,
+   res) {
+      return A2(String.startsWith,
+      s,
+      ss) ? Maybe.Just(res) : function () {
+         var _v35 = String.uncons(ss);
+         switch (_v35.ctor)
+         {case "Just":
+            switch (_v35._0.ctor)
+              {case "_Tuple2":
+                 return A3(firstString,
+                   s,
+                   _v35._0._1,
+                   res + 1);}
+              break;
+            case "Nothing":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 122 and 124");
+      }();
+   });
+   var splitFirst = F2(function (s,
+   ss) {
+      return function () {
+         var _v39 = A3(firstString,
+         s,
+         ss,
+         0);
+         switch (_v39.ctor)
+         {case "Just":
+            return Maybe.Just({ctor: "_Tuple2"
+                              ,_0: A2(String.left,_v39._0,ss)
+                              ,_1: A2(String.dropLeft,
+                              _v39._0 + 1,
+                              ss)});
+            case "Nothing":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 127 and 129");
+      }();
+   });
+   var rest = function (s) {
+      return function () {
+         var _v41 = String.uncons(s);
+         switch (_v41.ctor)
+         {case "Just":
+            switch (_v41._0.ctor)
+              {case "_Tuple2":
+                 return _v41._0._1;}
+              break;}
+         _E.Case($moduleName,
+         "between lines 118 and 119");
+      }();
+   };
+   var uniqueId0 = F3(function (ids,
+   s,
+   n) {
+      return function () {
+         var newId = List.concat(_J.toList([s
+                                           ,Prelude.show(n)]));
+         return A2(Set.member,
+         newId,
+         ids) ? A3(uniqueId0,
+         ids,
+         s,
+         n + 1) : newId;
+      }();
+   });
+   var A = {ctor: "A"};
+   var F = {ctor: "F"};
+   var L = {ctor: "L"};
+   var Var = function (a) {
+      return {ctor: "Var",_0: a};
+   };
+   var App = F2(function (a,b) {
+      return {ctor: "App"
+             ,_0: a
+             ,_1: b};
+   });
+   var listToApp0 = F2(function (x,
+   xs) {
+      return function () {
+         switch (xs.ctor)
+         {case "::":
+            return A2(listToApp0,
+              A2(App,x,xs._0),
+              xs._1);
+            case "[]": return x;}
+         _E.Case($moduleName,
+         "between lines 140 and 142");
+      }();
+   });
+   var listToApp = function (l) {
+      return function () {
+         switch (l.ctor)
+         {case "::":
+            return Maybe.Just(A2(listToApp0,
+              l._0,
+              l._1));
+            case "[]":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 137 and 139");
+      }();
+   };
+   var Lam = F2(function (a,b) {
+      return {ctor: "Lam"
+             ,_0: a
+             ,_1: b};
+   });
+   var termstr = function (x) {
+      return function () {
+         switch (x.ctor)
+         {case "App": switch (x._0.ctor)
+              {case "Lam": switch (x._1.ctor)
+                   {case "App":
+                      return List.concat(_J.toList([pstring(A2(Lam,
+                                                   x._0._0,
+                                                   x._0._1))
+                                                   ," "
+                                                   ,pstring(A2(App,
+                                                   x._1._0,
+                                                   x._1._1))]));}
+                   return List.concat(_J.toList([pstring(A2(Lam,
+                                                x._0._0,
+                                                x._0._1))
+                                                ," "
+                                                ,termstr(x._1)]));}
+              switch (x._1.ctor)
+              {case "App":
+                 return List.concat(_J.toList([termstr(x._0)
+                                              ," "
+                                              ,pstring(A2(App,
+                                              x._1._0,
+                                              x._1._1))]));}
+              return List.concat(_J.toList([termstr(x._0)
+                                           ," "
+                                           ,termstr(x._1)]));
+            case "Lam":
+            return List.concat(_J.toList(["λ"
+                                         ,x._0
+                                         ,"."
+                                         ,termstr(x._1)
+                                         ,""]));
+            case "Var": return x._0;}
+         _E.Case($moduleName,
+         "between lines 9 and 15");
+      }();
+   };
+   var pstring = function (t) {
+      return List.concat(_J.toList(["("
+                                   ,termstr(t)
+                                   ,")"]));
+   };
+   var findPath0 = F3(function (pred,
+   t,
+   res) {
+      return function () {
+         var _v63 = pred(t);
+         switch (_v63)
+         {case false:
+            return function () {
+                 switch (t.ctor)
+                 {case "App":
+                    return A4(findPathApp,
+                      pred,
+                      t._0,
+                      t._1,
+                      res);
+                    case "Lam": return A3(findPath0,
+                      pred,
+                      t._1,
+                      {ctor: "::",_0: L,_1: res});}
+                 return Maybe.Nothing;
+              }();
+            case true:
+            return Maybe.Just(res);}
+         _E.Case($moduleName,
+         "between lines 23 and 28");
+      }();
+   });
+   var findPathApp = F4(function (pred,
+   f,
+   a,
+   res) {
+      return function () {
+         var _v69 = A3(findPath0,
+         pred,
+         f,
+         {ctor: "::",_0: F,_1: res});
+         switch (_v69.ctor)
+         {case "Just":
+            return Maybe.Just(_v69._0);
+            case "Nothing":
+            return A3(findPath0,
+              pred,
+              a,
+              {ctor: "::",_0: A,_1: res});}
+         _E.Case($moduleName,
+         "between lines 19 and 21");
+      }();
+   });
+   var findPath = F2(function (pred,
+   t) {
+      return function () {
+         var _v71 = A3(findPath0,
+         pred,
+         t,
+         _J.toList([]));
+         switch (_v71.ctor)
+         {case "Just":
+            return Maybe.Just(List.reverse(_v71._0));
+            case "Nothing":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 30 and 32");
+      }();
+   });
+   var pathStep = F2(function (t,
+   b) {
+      return function () {
+         var _v73 = {ctor: "_Tuple2"
+                    ,_0: t
+                    ,_1: b};
+         switch (_v73.ctor)
+         {case "_Tuple2":
+            switch (_v73._0.ctor)
+              {case "App":
+                 switch (_v73._1.ctor)
+                   {case "A": return _v73._0._1;
+                      case "F": return _v73._0._0;}
+                   break;
+                 case "Lam":
+                 switch (_v73._1.ctor)
+                   {case "L": return _v73._0._1;}
+                   break;}
+              break;}
+         _E.Case($moduleName,
+         "between lines 34 and 37");
+      }();
+   });
+   var followPath = F2(function (t,
+   p) {
+      return function () {
+         switch (p.ctor)
+         {case "::":
+            return A2(followPath,
+              A2(pathStep,t,p._0),
+              p._1);
+            case "[]": return t;}
+         _E.Case($moduleName,
+         "between lines 39 and 41");
+      }();
+   });
+   var pathFirst = F4(function (t,
+   p,
+   pred,
+   current) {
+      return function () {
+         switch (p.ctor)
+         {case "::":
+            return pred(t) ? Maybe.Just(List.reverse(current)) : A4(pathFirst,
+              A2(pathStep,t,p._0),
+              p._1,
+              pred,
+              {ctor: "::"
+              ,_0: p._0
+              ,_1: current});
+            case "[]":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 49 and 52");
+      }();
+   });
+   var followPathThen = F3(function (t,
+   p,
+   fn) {
+      return function () {
+         var _v86 = {ctor: "_Tuple2"
+                    ,_0: t
+                    ,_1: p};
+         switch (_v86.ctor)
+         {case "_Tuple2":
+            switch (_v86._1.ctor)
+              {case "[]": return fn(_v86._0);}
+              switch (_v86._0.ctor)
+              {case "App":
+                 switch (_v86._1.ctor)
+                   {case "::":
+                      switch (_v86._1._0.ctor)
+                        {case "A": return A2(App,
+                             _v86._0._0,
+                             A3(followPathThen,
+                             _v86._0._1,
+                             _v86._1._1,
+                             fn));
+                           case "F": return A2(App,
+                             A3(followPathThen,
+                             _v86._0._0,
+                             _v86._1._1,
+                             fn),
+                             _v86._0._1);}
+                        break;}
+                   break;
+                 case "Lam":
+                 switch (_v86._1.ctor)
+                   {case "::":
+                      switch (_v86._1._0.ctor)
+                        {case "L": return A2(Lam,
+                             _v86._0._0,
+                             A3(followPathThen,
+                             _v86._0._1,
+                             _v86._1._1,
+                             fn));}
+                        break;}
+                   break;}
+              break;}
+         _E.Case($moduleName,
+         "between lines 43 and 47");
+      }();
+   });
+   var reducible = function (t) {
+      return function () {
+         switch (t.ctor)
+         {case "App": switch (t._0.ctor)
+              {case "Lam": return true;}
+              break;}
+         return false;
+      }();
+   };
+   var subst = F3(function (t,
+   s,
+   x) {
+      return function () {
+         switch (x.ctor)
+         {case "App": return A2(App,
+              A3(subst,t,s,x._0),
+              A3(subst,t,s,x._1));
+            case "Lam": return _U.eq(x._0,
+              s) ? A2(Lam,x._0,x._1) : A2(Lam,
+              x._0,
+              A3(subst,t,s,x._1));
+            case "Var": return _U.eq(x._0,
+              s) ? t : Var(x._0);}
+         _E.Case($moduleName,
+         "between lines 58 and 63");
+      }();
+   });
+   var freeIds = F2(function (t,
+   env) {
+      return function () {
+         switch (t.ctor)
+         {case "App":
+            return A2(Set.union,
+              A2(freeIds,t._0,env),
+              A2(freeIds,t._1,env));
+            case "Lam": return A2(freeIds,
+              t._1,
+              A2(Set.insert,t._0,env));
+            case "Var":
+            return A2(Set.member,
+              t._0,
+              env) ? Set.empty : Set.singleton(t._0);}
+         _E.Case($moduleName,
+         "between lines 65 and 69");
+      }();
+   });
+   var allIds = function (t) {
+      return function () {
+         switch (t.ctor)
+         {case "App":
+            return A2(Set.union,
+              allIds(t._0),
+              allIds(t._1));
+            case "Lam": return A2(Set.union,
+              Set.singleton(t._0),
+              allIds(t._1));
+            case "Var":
+            return Set.singleton(t._0);}
+         _E.Case($moduleName,
+         "between lines 83 and 86");
+      }();
+   };
+   var uniqueId = F2(function (t,
+   s) {
+      return A3(uniqueId0,
+      allIds(t),
+      s,
+      2);
+   });
+   var rename = F2(function (t,
+   _v120) {
+      return function () {
+         switch (_v120.ctor)
+         {case "Lam":
+            return function () {
+                 var s = A2(uniqueId,
+                 t,
+                 _v120._0);
+                 return A2(Lam,
+                 s,
+                 A3(subst,
+                 Var(s),
+                 _v120._0,
+                 _v120._1));
+              }();}
+         _E.Case($moduleName,
+         "between lines 80 and 81");
+      }();
+   });
+   var findScope = F3(function (t,
+   p,
+   ids) {
+      return A4(pathFirst,
+      t,
+      p,
+      function (x) {
+         return function () {
+            switch (x.ctor)
+            {case "Lam":
+               return A2(Set.member,
+                 x._0,
+                 ids) ? true : false;}
+            return false;
+         }();
+      },
+      _J.toList([]));
+   });
+   var conflict0 = F5(function (t,
+   p,
+   ids,
+   poss,
+   res) {
+      return function () {
+         switch (t.ctor)
+         {case "App":
+            return function () {
+                 var _v133 = A5(conflict0,
+                 t._0,
+                 p,
+                 ids,
+                 poss,
+                 {ctor: "::",_0: F,_1: res});
+                 switch (_v133.ctor)
+                 {case "Just":
+                    return Maybe.Just(_v133._0);
+                    case "Nothing":
+                    return A5(conflict0,
+                      t._1,
+                      p,
+                      ids,
+                      poss,
+                      {ctor: "::",_0: A,_1: res});}
+                 _E.Case($moduleName,
+                 "between lines 112 and 114");
+              }();
+            case "Lam": return _U.eq(t._0,
+              p) ? Maybe.Nothing : A5(conflict0,
+              t._1,
+              p,
+              ids,
+              poss || A2(Set.member,t._0,ids),
+              {ctor: "::",_0: L,_1: res});
+            case "Var": return _U.eq(t._0,
+              p) && poss ? Maybe.Just(List.reverse(res)) : Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 105 and 116");
+      }();
+   });
+   var conflict = F2(function (_v135,
+   a) {
+      return function () {
+         switch (_v135.ctor)
+         {case "Lam":
+            return A5(conflict0,
+              _v135._1,
+              _v135._0,
+              A2(freeIds,a,Set.empty),
+              false,
+              _J.toList([]));}
+         _E.Case($moduleName,
+         "on line 103, column 24 to 68");
+      }();
+   });
+   var reduceRename0 = F2(function (t,
+   _v139) {
+      return function () {
+         switch (_v139.ctor)
+         {case "App":
+            switch (_v139._0.ctor)
+              {case "Lam":
+                 return function () {
+                      var _v145 = A2(conflict,
+                      A2(Lam,_v139._0._0,_v139._0._1),
+                      _v139._1);
+                      switch (_v145.ctor)
+                      {case "Just":
+                         return function () {
+                              var _v147 = A3(findScope,
+                              _v139._0._1,
+                              _v145._0,
+                              A2(freeIds,_v139._1,Set.empty));
+                              switch (_v147.ctor)
+                              {case "Just": return A2(App,
+                                   A2(Lam,
+                                   _v139._0._0,
+                                   A3(followPathThen,
+                                   _v139._0._1,
+                                   _v147._0,
+                                   rename(t))),
+                                   _v139._1);}
+                              _E.Case($moduleName,
+                              "between lines 78 and 79");
+                           }();
+                         case "Nothing": return A3(subst,
+                           _v139._1,
+                           _v139._0._0,
+                           _v139._0._1);}
+                      _E.Case($moduleName,
+                      "between lines 76 and 79");
+                   }();}
+              break;}
+         _E.Case($moduleName,
+         "between lines 76 and 79");
+      }();
+   });
+   var reduceRename = function (t) {
+      return function () {
+         var _v149 = A2(findPath,
+         reducible,
+         t);
+         switch (_v149.ctor)
+         {case "Just":
+            return Maybe.Just(A3(followPathThen,
+              t,
+              _v149._0,
+              reduceRename0(t)));
+            case "Nothing":
+            return Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 71 and 74");
+      }();
+   };
+   var reduceN = F2(function (n,
+   mt) {
+      return function () {
+         switch (mt.ctor)
+         {case "Just": return _U.eq(n,
+              0) ? _J.toList([mt._0]) : {ctor: "::"
+                                        ,_0: mt._0
+                                        ,_1: A2(reduceN,
+                                        n - 1,
+                                        reduceRename(mt._0))};
+            case "Nothing":
+            return _J.toList([]);}
+         _E.Case($moduleName,
+         "between lines 229 and 232");
+      }();
+   });
+   var readLam = function (s) {
+      return A2(bnd,
+      function (_v153) {
+         return function () {
+            switch (_v153.ctor)
+            {case "_Tuple2": return A2(fmap,
+                 function (b) {
+                    return A2(Lam,_v153._0,b);
+                 },
+                 read(_v153._1));}
+            _E.Case($moduleName,
+            "between lines 155 and 156");
+         }();
+      },
+      readParam(s));
+   };
+   var read = function (s) {
+      return A2(bnd,
+      listToApp,
+      readList(trim(s)));
+   };
+   var readList = function (s) {
+      return function () {
+         var _v157 = String.uncons(trim(s));
+         switch (_v157.ctor)
+         {case "Just":
+            return readList0(_v157._0);
+            case "Nothing":
+            return Maybe.Just(_J.toList([]));}
+         _E.Case($moduleName,
+         "between lines 144 and 146");
+      }();
+   };
+   var readList0 = function (_v159) {
+      return function () {
+         switch (_v159.ctor)
+         {case "_Tuple2":
+            return _U.eq(_v159._0,
+              lam) ? A2(fmap,
+              function (t) {
+                 return _J.toList([t]);
+              },
+              readLam(_v159._1)) : _U.eq(_v159._0,
+              _U.chr("(")) ? A2(bnd,
+              function (_v163) {
+                 return function () {
+                    switch (_v163.ctor)
+                    {case "_Tuple2": return A2(fmap,
+                         function (ts) {
+                            return {ctor: "::"
+                                   ,_0: _v163._0
+                                   ,_1: ts};
+                         },
+                         readList(_v163._1));}
+                    _E.Case($moduleName,
+                    "on line 149, column 56 to 89");
+                 }();
+              },
+              readParen(_v159._1)) : seperator(_v159._0) ? Maybe.Nothing : function () {
+                 var _v167 = A2(readWord0,
+                 _v159._0,
+                 A2(String.cons,
+                 _v159._0,
+                 _v159._1));
+                 switch (_v167.ctor)
+                 {case "_Tuple2": return A2(fmap,
+                      function (ts) {
+                         return {ctor: "::"
+                                ,_0: Var(_v167._0)
+                                ,_1: ts};
+                      },
+                      readList(_v167._1));}
+                 _E.Case($moduleName,
+                 "between lines 152 and 153");
+              }();}
+         _E.Case($moduleName,
+         "between lines 148 and 153");
+      }();
+   };
+   var readParen = function (s) {
+      return A2(bnd,
+      function (_v170) {
+         return function () {
+            switch (_v170.ctor)
+            {case "_Tuple2": return A2(fmap,
+                 function (t) {
+                    return {ctor: "_Tuple2"
+                           ,_0: t
+                           ,_1: _v170._1};
+                 },
+                 read(_v170._0));}
+            _E.Case($moduleName,
+            "on line 165, column 34 to 64");
+         }();
+      },
+      readParen0(s));
+   };
+   var parse = function (s) {
+      return function () {
+         var _v174 = read(s);
+         switch (_v174.ctor)
+         {case "Just":
+            return A2(List.map,
+              termstr,
+              A2(reduceN,
+              50,
+              Maybe.Just(_v174._0)));
+            case "Nothing":
+            return _J.toList([":("]);}
+         _E.Case($moduleName,
+         "between lines 221 and 223");
+      }();
+   };
+   var inputs = A2(Signal.lift,
+   Graphics.Element.flow(Graphics.Element.down),
+   A2(Signal.lift,
+   function (x) {
+      return A2(List.map,
+      Text.plainText,
+      parse(x));
+   },
+   content));
+   var main = A3(Signal.lift2,
+   Graphics.Element.above,
+   A2(Signal.lift,
+   Graphics.Element.width(1000),
+   field),
+   inputs);
+   _elm.Main.values = {_op: _op
+                      ,termstr: termstr
+                      ,pstring: pstring
+                      ,findPathApp: findPathApp
+                      ,findPath0: findPath0
+                      ,findPath: findPath
+                      ,pathStep: pathStep
+                      ,followPath: followPath
+                      ,followPathThen: followPathThen
+                      ,pathFirst: pathFirst
+                      ,reducible: reducible
+                      ,subst: subst
+                      ,freeIds: freeIds
+                      ,reduceRename: reduceRename
+                      ,reduceRename0: reduceRename0
+                      ,rename: rename
+                      ,allIds: allIds
+                      ,uniqueId: uniqueId
+                      ,uniqueId0: uniqueId0
+                      ,findScope: findScope
+                      ,conflict: conflict
+                      ,conflict0: conflict0
+                      ,rest: rest
+                      ,firstString: firstString
+                      ,splitFirst: splitFirst
+                      ,lam: lam
+                      ,read: read
+                      ,listToApp: listToApp
+                      ,listToApp0: listToApp0
+                      ,readList: readList
+                      ,readList0: readList0
+                      ,readLam: readLam
+                      ,readParam: readParam
+                      ,readParen: readParen
+                      ,readParen0: readParen0
+                      ,readParen1: readParen1
+                      ,seperator: seperator
+                      ,white: white
+                      ,trim: trim
+                      ,readWord: readWord
+                      ,readWord0: readWord0
+                      ,readWord1: readWord1
+                      ,bnd: bnd
+                      ,fmap: fmap
+                      ,content: content
+                      ,field: field
+                      ,blank: blank
+                      ,purse: purse
+                      ,porse: porse
+                      ,parse: parse
+                      ,inputs: inputs
+                      ,reduceN: reduceN
+                      ,main: main
+                      ,Lam: Lam
+                      ,App: App
+                      ,Var: Var
+                      ,L: L
+                      ,F: F
+                      ,A: A};
+   return _elm.Main.values;
+};</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script><noscript></noscript></body></html>
