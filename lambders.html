@@ -656,20 +656,23 @@ Elm.Surface.make = function (_elm) {
          "between lines 18 and 21");
       }();
    };
-   var lam = function () {
-      var _v20 = String.uncons("λ");
-      switch (_v20.ctor)
-      {case "Just":
-         switch (_v20._0.ctor)
-           {case "_Tuple2":
-              return _v20._0._0;}
-           break;}
-      _E.Case($moduleName,
-      "on line 12, column 7 to 50");
-   }();
-   var seperator = function (c) {
+   var lam = function (c) {
       return _U.eq(c,
-      lam) || (_U.eq(c,
+      _U.chr("\\")) || _U.eq(c,
+      function () {
+         var _v20 = String.uncons("λ");
+         switch (_v20.ctor)
+         {case "Just":
+            switch (_v20._0.ctor)
+              {case "_Tuple2":
+                 return _v20._0._0;}
+              break;}
+         _E.Case($moduleName,
+         "on line 12, column 28 to 71");
+      }());
+   };
+   var seperator = function (c) {
+      return lam(c) || (_U.eq(c,
       _U.chr(".")) || (_U.eq(c,
       _U.chr("(")) || (_U.eq(c,
       _U.chr(")")) || white(c))));
@@ -834,8 +837,7 @@ Elm.Surface.make = function (_elm) {
             return function () {
                switch (_v50.ctor)
                {case "_Tuple2":
-                  return _U.eq(_v50._0,
-                    lam) ? A2(fmap,
+                  return lam(_v50._0) ? A2(fmap,
                     function (t) {
                        return _J.toList([t]);
                     },
