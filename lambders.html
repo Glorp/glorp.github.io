@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html><head><meta charset="UTF-8"><title>stuff</title><script type="text/javascript" src="elm-runtime.js"></script><script type="text/javascript">Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
+   "use strict";
    _elm.Main = _elm.Main || {};
    if (_elm.Main.values)
    return _elm.Main.values;
@@ -19,12 +20,14 @@ Elm.Main.make = function (_elm) {
    Graphics.Element = Elm.Graphics.Element.make(_elm);
    var Graphics = Graphics || {};
    Graphics.Input = Elm.Graphics.Input.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Input = Graphics.Input || {};
+   Graphics.Input.Field = Elm.Graphics.Input.Field.make(_elm);
    var Keyboard = Elm.Keyboard.make(_elm);
    var List = Elm.List.make(_elm);
    var Maybe = Elm.Maybe.make(_elm);
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
-   var Prelude = Elm.Prelude.make(_elm);
    var Signal = Elm.Signal.make(_elm);
    var String = Elm.String.make(_elm);
    var Surface = Elm.Surface.make(_elm);
@@ -32,8 +35,13 @@ Elm.Main.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var link = Signal.constant(Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><p><a href=\"https://github.com/Glorp/Elmbdas\">ploink</a></p><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "57:18"));
+   var link = Signal.constant(A2(Graphics.Element.beside,
+   Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><p><a href=\"https://github.com/Glorp/Elmbdas\">ploink</a></p><div style=\"height:0;width:0;\">&nbsp;</div>",
+   "61:26"),
+   A3(Graphics.Element.image,
+   50,
+   50,
+   "php.gif")));
    var defTerm = function (t) {
       return function () {
          switch (t.ctor)
@@ -60,7 +68,7 @@ Elm.Main.make = function (_elm) {
                   case "[]":
                   return _J.toList([]);}
                _E.Case($moduleName,
-               "between lines 26 and 31");
+               "between lines 30 and 35");
             }();
          });
          var add = F3(function (s,t,l) {
@@ -81,7 +89,7 @@ Elm.Main.make = function (_elm) {
                     s,
                     t)]);}
                _E.Case($moduleName,
-               "between lines 21 and 25");
+               "between lines 25 and 29");
             }();
          });
          return function () {
@@ -101,11 +109,38 @@ Elm.Main.make = function (_elm) {
          }();
       }();
    });
-   var $ = Graphics.Input.field("λ"),
+   var makeField = F2(function (s,
+   ss) {
+      return function () {
+         var content = Graphics.Input.input(A2(Graphics.Input.Field.Content,
+         ss,
+         A3(Graphics.Input.Field.Selection,
+         0,
+         0,
+         Graphics.Input.Field.Forward)));
+         var fi = A2(Signal.lift,
+         A4(Graphics.Input.Field.field,
+         Graphics.Input.Field.defaultStyle,
+         content.handle,
+         Basics.id,
+         s),
+         content.signal);
+         return {ctor: "_Tuple2"
+                ,_0: fi
+                ,_1: content.signal};
+      }();
+   });
+   var $ = A2(makeField,
+   "λ",
+   "(λa.λb.a (λn.λf.λx.f (n f x)) b) (λf.λx.f (f x)) (λf.λx.f (f x))"),
    field = $._0,
    content = $._1;
    var termsig = A2(Signal.lift,
-   Surface.readTerm,
+   function ($) {
+      return Surface.readTerm(function (_) {
+         return _.string;
+      }($));
+   },
    content);
    var reduceN = F2(function (n,
    mt) {
@@ -120,7 +155,7 @@ Elm.Main.make = function (_elm) {
             case "Nothing":
             return _J.toList([]);}
          _E.Case($moduleName,
-         "between lines 11 and 14");
+         "between lines 13 and 16");
       }();
    });
    var tstr = F2(function (x,
@@ -138,7 +173,7 @@ Elm.Main.make = function (_elm) {
             case "Nothing":
             return _J.toList([":("]);}
          _E.Case($moduleName,
-         "between lines 48 and 51");
+         "between lines 52 and 55");
       }();
    });
    var mtermstr = function (x) {
@@ -153,7 +188,7 @@ Elm.Main.make = function (_elm) {
             case "Nothing":
             return _J.toList([":("]);}
          _E.Case($moduleName,
-         "between lines 53 and 55");
+         "between lines 57 and 59");
       }();
    };
    var entered = A3(Signal.keepIf,
@@ -206,6 +241,7 @@ Elm.Main.make = function (_elm) {
    _elm.Main.values = {_op: _op
                       ,entered: entered
                       ,reduceN: reduceN
+                      ,makeField: makeField
                       ,content: content
                       ,field: field
                       ,addRemoveDef: addRemoveDef
@@ -220,6 +256,7 @@ Elm.Main.make = function (_elm) {
    return _elm.Main.values;
 };Elm.Eval = Elm.Eval || {};
 Elm.Eval.make = function (_elm) {
+   "use strict";
    _elm.Eval = _elm.Eval || {};
    if (_elm.Eval.values)
    return _elm.Eval.values;
@@ -239,7 +276,6 @@ Elm.Eval.make = function (_elm) {
    var Maybe = Elm.Maybe.make(_elm);
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
-   var Prelude = Elm.Prelude.make(_elm);
    var Set = Elm.Set.make(_elm);
    var Signal = Elm.Signal.make(_elm);
    var String = Elm.String.make(_elm);
@@ -270,7 +306,7 @@ Elm.Eval.make = function (_elm) {
          var uniq = function (n) {
             return function () {
                var newId = List.concat(_J.toList([s
-                                                 ,Prelude.show(n)]));
+                                                 ,String.show(n)]));
                return A2(Set.member,
                newId,
                ids) ? uniq(n + 1) : newId;
@@ -712,6 +748,7 @@ Elm.Eval.make = function (_elm) {
    return _elm.Eval.values;
 };Elm.Surface = Elm.Surface || {};
 Elm.Surface.make = function (_elm) {
+   "use strict";
    _elm.Surface = _elm.Surface || {};
    if (_elm.Surface.values)
    return _elm.Surface.values;
@@ -731,7 +768,6 @@ Elm.Surface.make = function (_elm) {
    var Maybe = Elm.Maybe.make(_elm);
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
-   var Prelude = Elm.Prelude.make(_elm);
    var Signal = Elm.Signal.make(_elm);
    var String = Elm.String.make(_elm);
    var Term = Elm.Term.make(_elm);
@@ -1200,6 +1236,7 @@ Elm.Surface.make = function (_elm) {
    return _elm.Surface.values;
 };Elm.Term = Elm.Term || {};
 Elm.Term.make = function (_elm) {
+   "use strict";
    _elm.Term = _elm.Term || {};
    if (_elm.Term.values)
    return _elm.Term.values;
@@ -1219,7 +1256,6 @@ Elm.Term.make = function (_elm) {
    var Maybe = Elm.Maybe.make(_elm);
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
-   var Prelude = Elm.Prelude.make(_elm);
    var Signal = Elm.Signal.make(_elm);
    var String = Elm.String.make(_elm);
    var Text = Elm.Text.make(_elm);
