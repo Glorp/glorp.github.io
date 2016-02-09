@@ -1,0 +1,229 @@
+@media all {html {font-size: 24px;}}
+@media all and (max-width:1000px){html {font-size: 24px;}}
+@media all and (max-width:960px){html {font-size: 23px;}}
+@media all and (max-width:920px){html {font-size: 22px;}}
+@media all and (max-width:880px){html {font-size: 21px;}}
+@media all and (max-width:840px){html {font-size: 20px;}}
+@media all and (max-width:800px){html {font-size: 19px;}}
+@media all and (max-width:760px){html {font-size: 18px;}}
+@media all and (max-width:720px){html {font-size: 17px;}}
+@media all and (max-width:680px){html {font-size: 16px;}}
+@media all and (max-width:640px){html {font-size: 15px;}}
+@media all and (max-width:600px){html {font-size: 14px;}}
+@media all and (max-width:560px){html {font-size: 13px;}}
+@media all and (max-width:520px){html {font-size: 12px;}}
+
+
+
+html {
+    background-color: #F8F8F8;
+    overflow-y: scroll;
+}
+
+h1 {
+    font-variant: small-caps;
+    font-weight: normal;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0rem;
+    margin-left: 0rem;
+}
+
+h2 {
+    font-variant: small-caps;
+    font-weight: normal;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-left: 0rem;
+}
+
+h3 {
+    font-variant: small-caps;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0rem;
+    margin-top: 0.5rem;
+    margin-left: 0rem;
+}
+
+body > * {
+    text-rendering: optimizeLegibility;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    line-height: 1.25;
+    hyphens: manual;
+}
+
+a {
+    background-color: inherit;
+    color: inherit;
+    text-decoration: none;
+
+    -moz-transition-property: background;
+    -webkit-transition-property: background;
+    transition-property: background;
+    -moz-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+a.link:before {
+    position: relative;
+    content: "\25DC";
+    margin-left: 0.10em;
+    font-size: 50%;
+    top: -0.6em;
+    color: inherit;
+}
+
+a.link:after {
+    position: relative;
+    content: "\25DD";
+    margin-left: 0.10em;
+    font-size: 50%;
+    top: -0.6em;
+    color: inherit;
+}
+
+a:hover {
+    background-color: #F4F4F4;
+}
+
+aside {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: #667;
+    float: left;
+
+    margin-top: 0rem;
+    margin-left: 0rem;
+
+    width: 10rem;
+}
+
+pre {
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
+    overflow-x: auto;
+
+    margin-bottom: 0.5rem;
+    margin-top: 0rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    
+    float: top;
+    background-color: #F4F4F4;
+}
+
+.navinfo {
+    float: left;
+    margin-top: 0rem;
+    margin-left: 0rem;
+    display: block;
+    width: 11rem;
+}
+
+.nav {
+
+    background-color: #F4F4F4;
+    font-weight: normal;
+    font-size: 2rem;
+    text-align: right;
+
+    margin-top: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.navlink {
+    float: top;
+    margin-top: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 0rem;
+
+}
+
+.navlinkf {
+
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    float: top;
+    text-align: left;
+    margin-top: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 0rem;
+}
+
+.navlink:hover {
+    background-color: #FFFFFF;
+}
+
+.navlinkf:hover {
+    background-color: #FFFFFF;
+}
+
+.info {
+
+    background-color: #F4F4F4;
+    width: 11rem;
+    font-size: 0.5rem;
+    line-height: 1.2;
+    color: #667;
+    float: left;
+
+    margin-top: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.code {
+    font-family: Consolas, monospace;
+    font-size: 0.8rem;
+    background-color: #F4F4F4;
+}
+
+.content
+{
+    float: top;
+    width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.par
+{
+    margin-bottom: 0.5rem;
+    margin-top: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-right: auto;
+    float:top;
+}
+
+
+.text
+{
+
+    width: 30rem;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
+    margin-left: 13rem;
+    margin-right: auto;
+    float:top;
+}
+
+.error
+{
+    color: red;
+    font-style: italic;
+}

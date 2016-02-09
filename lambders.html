@@ -35,13 +35,9 @@ Elm.Main.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var link = Signal.constant(A2(Graphics.Element.beside,
+   var link = Signal.constant(
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><p><a href=\"https://github.com/Glorp/Elmbdas\">ploink</a></p><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "61:26"),
-   A3(Graphics.Element.image,
-   50,
-   50,
-   "php.gif")));
+   "61:26"));
    var defTerm = function (t) {
       return function () {
          switch (t.ctor)
