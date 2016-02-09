@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>about</title><link rel="stylesheet" href="styles.css" /></meta></head><body><div class="content"><div class="navinfo"><div class="nav"><a href="top.html"><div class="navlink">⊤</div></a> <a href="think.html"><div class="navlinkf">thinkpieces</div></a> <a href="about.html"><div class="navlink">about</div></a> <a href="bot.html"><div class="navlink">⊥</div></a></div><div class="info">Generated from:<br /><a href="https://github.com/Glorp/glorp.github.io/blob/6c51daf6e680397cd67e3df613c77ade31d71131/about.rkt">about.rkt<br />6c51daf6e680397cd67e3df613c77ade31d71131</a></div></div><div class="text"><h1><a name="bout"></a><a href="#bout">about</a></h1><pre><a name="bout-noex0"></a>#lang racket</pre><p class="par"><a name="bout-par0"></a>okay hi. yeah okay, let’s make a bout</p><pre><a name="bout-top0"></a>(require 2htdp/image
+         lang/posn)
+
+(define (filled f fill . args)
+  (define pen (make-pen 'black 3 'solid 'round 'round))
+  (overlay (apply f `(,@args outline ,pen))
+           (apply f `(,@args solid ,fill))))</pre><p class="par"><a name="bout-par1"></a>should help us make shapes with lines around them. let’s test:</p><pre><a name="bout-eval0"></a>&gt; (filled circle 'red 20)
+<img src="about/pict/pict0.png" /></pre><p class="par"><a name="bout-par2"></a>this is fine.</p><pre><a name="bout-top1"></a>(define bottom
+  (filled polygon 'brown (list (make-posn 0 0)
+                               (make-posn 200 0)
+                               (make-posn 180 50)
+                               (make-posn 30 50))))</pre><pre><a name="bout-eval1"></a>&gt; bottom
+<img src="about/pict/pict1.png" /></pre><pre><a name="bout-top2"></a>(define top (above/align 'right
+                         (filled rectangle
+                                 'darkgray
+                                 20
+                                 23)
+                         (filled rectangle
+                                 'red
+                                 70
+                                 50)))</pre><pre><a name="bout-eval2"></a>&gt; top
+<img src="about/pict/pict2.png" /></pre><p class="par"><a name="bout-par3"></a>so we have top part of boat and bottom part of boat and we will make boat by putting top on <em>top</em> of bottom</p><pre><a name="bout-top3"></a>(define boat (above top bottom))</pre><p class="par"><a name="bout-par4"></a>now we just need the sea. the sea is made of blue</p><pre><a name="bout-eval3"></a>&gt; (ellipse 70 40 'solid 'blue)
+<img src="about/pict/pict3.png" /></pre><pre><a name="bout-top4"></a>(define blue (ellipse 70 40 'solid 'blue))
+
+(define sea (foldr (λ (_ img) (overlay/xy blue 50 0 img))
+                   blue
+                   '(1 2 3 4)))</pre><p class="par"><a name="bout-par5"></a>is it a boat ??</p><pre><a name="bout-eval4"></a>&gt; (crop 10 0 250 130 (underlay/xy boat -40 95 sea))
+<img src="about/pict/pict4.png" /></pre><p class="par"><a name="bout-par6"></a>is boat</p><p class="par"><a name="bout-par7"></a>okay,</p></div></div></body></html>
