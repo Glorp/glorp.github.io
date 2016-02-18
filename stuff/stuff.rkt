@@ -1,9 +1,11 @@
 #lang racket
 
-(require (only-in xml xexpr->string))
-(require "stuff/images.rkt"
-         "stuff/git-halp.rkt"
-         (only-in racket/path find-relative-path))
+(provide write-file)
+
+(require "images.rkt"
+         "git-halp.rkt"
+         (only-in racket/path find-relative-path)
+         (only-in xml xexpr->string))
 
 (define-syntax-rule (with-anchor [a hash] body ...)
   (let ([a `(a ((name ,(symbol->string (hash-ref hash '#:name)))))])
@@ -73,7 +75,7 @@
 
 (define git-root
   (let ()
-    (define-values  (git-root blah bloh) (split-path (syntax-source #'e)))
+    (define-values  (git-root blah bloh) (split-path (simple-form-path (build-path (syntax-source #'e) ".."))))
     git-root))
 
 (define repo-url "https://github.com/Glorp/glorp.github.io")
@@ -155,14 +157,3 @@
      (call-with-output-file file #:exists 'truncate
        (λ (port)
          (display (->html xexpr) port)))]))
-
-(module+ main
-  (require "about.rkt"
-           "index.rkt"
-           "top.rkt"
-           "think.rkt")
-
-  (write-file index)
-  (write-file top)
-  (write-file about)
-  (write-file think))
