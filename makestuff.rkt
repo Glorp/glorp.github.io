@@ -2,13 +2,12 @@
 
 (require "stuff/stuff.rkt")
 
-(module+ main
-  (require "about.rkt"
-           "index.rkt"
-           "top.rkt"
-           "think.rkt")
+(require "about.rkt"
+         "index.rkt"
+         "top.rkt"
+         "think.rkt")
 
-  (write-file index)
-  (write-file top)
-  (write-file about)
-  (write-file think))
+(write-files index)
+(write-files top)
+(write-files about)
+(write-files think)

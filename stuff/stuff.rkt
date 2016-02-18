@@ -1,9 +1,10 @@
 #lang racket
 
-(provide write-file)
+(provide write-files)
 
 (require "images.rkt"
          "git-halp.rkt"
+         "extract.rkt"
          (only-in racket/path find-relative-path)
          (only-in xml xexpr->string))
 
@@ -86,20 +87,29 @@
                 p))
   (format "~a/blob/~a/~a" repo-url commit (string-replace p "\\" "/")))
 
-(define (info meta)
-  (define path (hash-ref meta 'file))
+(define (gitinfo-xexpr path)
   (define-values (base file foo) (split-path path))
   (define rel (find-relative-path git-root path))
-  (define gitinfo
-    (match (git-info git-root rel)
-      ['untracked "nope"]
-      [`(commit ,c) `(a ((href ,(commit->url c rel))) ,(path->string file) (br) ,c)]
-      [`(modified ,c) `(a ((href ,(commit->url c rel))) ,(path->string file) (br) ,c)]))
-    
+  (match (git-info git-root rel)
+    ['untracked "nope"]
+    [`(commit ,c) `(a ((href ,(commit->url c rel))) ,(path->string file) (br) ,c)]
+    [`(modified ,c) `(a ((href ,(commit->url c rel))) ,(path->string file) (br) ,c)]))
+
+(define (info meta extract)
   `(div ((class "info"))
         "Generated from:"
         (br)
-        ,gitinfo))
+        ,(gitinfo-xexpr (hash-ref meta 'file))
+        ,@(extract-link extract)))
+
+(define (extract-link extract)
+  (match extract
+    [#f '()]
+    [`(,file ,_)
+     `((br)
+       "File with regular Racket-code:"
+       (br)
+       ,(gitinfo-xexpr file))]))
 
 (define nav
   '(div ((class "nav"))
@@ -115,7 +125,7 @@
         (a ((href "bot.html"))
            (div ((class "navlink")) "⊥"))))
 
-(define (stuff->path/xexpr stuff)
+(define (stuff/extract->path/xexpr stuff extract)
   (match stuff
     [`(,name ,meta ,pieces)
      (define rktfile (string->path (hash-ref meta 'file)))
@@ -142,7 +152,7 @@
               (body (div ((class "content"))
                          (div ((class "navinfo"))
                               ,nav
-                              ,(info meta))
+                              ,(info meta extract))
                          (div ((class "text"))
                               ,@(filter (λ (x) x) (map (piece->xexpr base-name) pieces))))))))]))
 
@@ -151,8 +161,16 @@
   (string-append "<!DOCTYPE HTML>\n"
                  (xexpr->string xexpr)))
 
-(define (write-file stuff)
-  (match (stuff->path/xexpr stuff)
+(define (write-files stuff)
+  (define extract (extract-rkt stuff))
+  (match extract
+    [`(,file ,str)
+     (call-with-output-file file #:exists 'truncate
+       (λ (port)
+         (display str port)))]
+    [#f (void)])
+  
+  (match (stuff/extract->path/xexpr stuff extract)
     [`(,file ,xexpr)
      (call-with-output-file file #:exists 'truncate
        (λ (port)
