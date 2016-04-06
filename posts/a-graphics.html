@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>a graphics</title><link rel="stylesheet" href="../styles.css" /></meta></head><body><div class="content"><div class="navinfo"><div class="nav"><a href="../top.html"><div class="navlink">⊤</div></a> <a href="../think.html"><div class="navlinkf">thinkpieces</div></a> <a href="../about.html"><div class="navlink">about</div></a> <a href="../bot.html"><div class="navlink">⊥</div></a></div><div class="info">Generated from:<br /><a href="https://github.com/Glorp/glorp.github.io/blob/67085361732410b846554cb411cf9d7e0e048d97/posts/a-graphics.rkt">a-graphics.rkt<br />67085361732410b846554cb411cf9d7e0e048d97</a><br />File with regular Racket-code:<br /><a href="https://github.com/Glorp/glorp.github.io/blob/67085361732410b846554cb411cf9d7e0e048d97/posts/a-graphics-extract.rkt">a-graphics-extract.rkt<br />67085361732410b846554cb411cf9d7e0e048d97</a></div></div><div class="text"><pre><a name="noex0"></a>#lang racket</pre><pre><a name="top0"></a>(require 2htdp/image)</pre><p class="par"><a name="par0"></a>Hi, hello.</p><p class="par"><a name="par1"></a>There’s a function, <span class="code">color-list-&gt;bitmap</span>, that takes a list of colors and
+returns an image:</p><pre><a name="eval0"></a>&gt; (color-list-&gt;bitmap (for/list ([i (in-range 0 256)])
+                        (color i i i))
+                      16
+                      16)
+<img src="a-graphics/pict/pict0.png" /></pre><p class="par"><a name="par2"></a>So that’s nice.</p><p class="par"><a name="par3"></a>Can make like an image-generator-thing that takes something like a
+position-to-colour-function as argument.</p><pre><a name="top1"></a>(define ((gen-img img-w img-h) gen-f)
+  (define f (gen-f img-w img-h))
+  (define colors
+    (for*/list ([y (in-range img-h)]
+                [x (in-range img-w)])
+      (f x y)))
+  
+  (color-list-&gt;bitmap colors
+                      img-w
+                      img-h))</pre><pre><a name="eval1"></a>&gt; ((gen-img 256 10) (λ (w h) (λ (x y) (color x y 127))))
+<img src="a-graphics/pict/pict1.png" /></pre><p class="par"><a name="par4"></a>Good. Let’s also some helper-stuff:</p><pre><a name="top2"></a>(define (px x)
+  (modulo (if (exact-integer? x)
+              x
+              (inexact-&gt;exact (floor x)))
+          256))
+
+(define (px* x)
+  (abs (remainder (if (exact-integer? x)
+                      x
+                      (inexact-&gt;exact (floor x)))
+                  256)))
+
+(define (fl x)
+  (px (* x 256)))
+
+(define (fl* x)
+  (px* (* x 256)))</pre><p class="par"><a name="par5"></a>Okay now can make some images.</p><pre><a name="eval2"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (fl (cos (/ (+ x y) 500)))
+              (fl (sin (/ y 50)))
+              (fl (sin (/ x 10)))))))
+<img src="a-graphics/pict/pict2.png" /></pre><pre><a name="eval3"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (fl* (sin (/ y 50)))
+              (fl* (cos (/ (+ (- img-w x) y) 500)))
+              (fl* (sin (/ (+ (* y img-w) x) 10)))))))
+<img src="a-graphics/pict/pict3.png" /></pre><p class="par"><a name="par6"></a>Also a distance-between-two-points-function, because that’s pretty circly.</p><pre><a name="top3"></a>(define (dist from-x from-y to-x to-y)
+  (define (^2 x) (* x x))
+  (sqrt (+ (^2 (- to-x from-x)) (^2 (- to-y from-y)))))</pre><p class="par"><a name="par7"></a>Okay.</p><pre><a name="eval4"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (px (dist x y 50 100))
+              (px (dist x y 100 100))
+              (px (dist x y 100 150))))))
+<img src="a-graphics/pict/pict4.png" /></pre><pre><a name="eval5"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (fl* (sin (/ (dist x y 50 50) 50)))
+              (fl (cos (/ (dist x y 100 100) 100)))
+              (px (dist x y 100 150))))))
+<img src="a-graphics/pict/pict5.png" /></pre><pre><a name="eval6"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (fl* (sin (/ (dist x y 50 600) 50)))
+              (px (dist x y 500 300))
+              (fl (cos (/ (dist x y 300 50) 100)))))))
+<img src="a-graphics/pict/pict6.png" /></pre><pre><a name="eval7"></a>&gt; ((gen-img 640 480)
+   (λ (img-w img-h)
+     (λ (x y)
+       (color (fl* (cos (/ (+ (- img-w x) y) 500)))
+              (fl* (cos (/ (+ (- img-w x) y) 500)))
+              (fl (cos (/ (dist x y 70 160) 100)))))))
+<img src="a-graphics/pict/pict7.png" /></pre><p class="par"><a name="par8"></a>Okay bye.</p></div></div></body></html>
