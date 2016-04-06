@@ -22,10 +22,13 @@
       [`(tt ,s) `(span ([class "code"]) ,s)]
       [`(link ,url ,text) `(a ([class "link"] [href ,url]) ,text)])))
 
-(define (meta->xexprs meta)
+(define (meta->xexprs meta from)
   (define title (hash-ref meta 'title "untitled"))
   `((title ,title)
-    (link ((rel "stylesheet") (href "styles.css")))))
+    (link ((rel "stylesheet") (href ,(relative-url from (build-path git-root "styles.css")))))))
+
+(define (format-input-string s)
+  (apply ~a "> " (add-between (string-split s "\n") "\n  ")))
 
 (define ((piece->xexpr base-name) piece)
   (match piece
@@ -47,11 +50,11 @@
     
     [`(eval ,h ,str (result ,res))
      (with-anchor [a h]
-                  `(pre ,a "> " ,str "\n" ,@(format-res (pretty-format res) base-name)))]
+                  `(pre ,a ,(format-input-string str) "\n" ,@(format-res (pretty-format res) base-name)))]
 
     [`(eval ,h ,str (error ,e))
      (with-anchor [a h]
-                  `(pre ,a "> " ,str "\n" (span ([class "error"]) ,(exn-message e))))]
+                  `(pre ,a ,(format-input-string str) "\n" (span ([class "error"]) ,(exn-message e))))]
     
       [`(hidden ,h ,str)
        #f]
@@ -79,7 +82,11 @@
     (define-values  (git-root blah bloh) (split-path (simple-form-path (build-path (syntax-source #'e) ".."))))
     git-root))
 
+
 (define repo-url "https://github.com/Glorp/glorp.github.io")
+
+(define (relative-url from to)
+  (string-replace (path->string (find-relative-path from to)) "\\" "/"))
 
 (define (commit->url commit path)
   (define p (if (path? path)
@@ -111,18 +118,20 @@
        (br)
        ,(gitinfo-xexpr file))]))
 
-(define nav
-  '(div ((class "nav"))
-        (a ((href "top.html"))
+(define (nav from)
+  (define (url-to s)
+    (relative-url from (build-path git-root s)))
+  `(div ((class "nav"))
+        (a ((href ,(url-to "top.html")))
            (div ((class "navlink")) "⊤"))
         " "
-        (a ((href "think.html"))
+        (a ((href ,(url-to "think.html")))
            (div ((class "navlinkf")) "thinkpieces"))
         " "
-        (a ((href "about.html"))
+        (a ((href ,(url-to "about.html")))
            (div ((class "navlink")) "about"))
         " "
-        (a ((href "bot.html"))
+        (a ((href ,(url-to "bot.html")))
            (div ((class "navlink")) "⊥"))))
 
 (define (stuff/extract->path/xexpr stuff extract)
@@ -148,10 +157,10 @@
                     [pretty-print-size-hook (make-pretty-print-size-hook (pretty-print-size-hook))])
      
        (list html-file
-             `(html (head (meta ((charset "UTF-8")) ,@(meta->xexprs meta)))
+             `(html (head (meta ((charset "UTF-8")) ,@(meta->xexprs meta dir)))
               (body (div ((class "content"))
                          (div ((class "navinfo"))
-                              ,nav
+                              ,(nav dir)
                               ,(info meta extract))
                          (div ((class "text"))
                               ,@(filter (λ (x) x) (map (piece->xexpr base-name) pieces))))))))]))
